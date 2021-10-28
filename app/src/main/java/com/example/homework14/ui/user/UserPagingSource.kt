@@ -5,13 +5,15 @@ import androidx.paging.PagingState
 import com.example.homework14.model.User
 import com.example.homework14.model.UserPage
 import com.example.homework14.network.NetworkClient
+import kotlinx.coroutines.delay
 import java.lang.Exception
 
 class UserPagingSource : PagingSource<Int, User>() {
 
     override fun getRefreshKey(state: PagingState<Int, User>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 
